@@ -9,7 +9,7 @@ A single 200 lines python code to demostrate DQN using Keras
 
 This project demostrated how to use Deep-Q Learning algorithm with Keras together to play Flappy Bird.
 
-It is my first project in Machine Learning and intented to target new-comers who are interested in Reinforcement Learning.
+This is my first project in Machine Learning and intented to target new-comers who are interested in Reinforcement Learning.
 
 # Installation Dependencies:
 
@@ -109,6 +109,12 @@ def buildmodel():
 
 The exact architecture is as follows : The input to the neural network consistes of an 4x80x80 images. The first hidden layer convolves 32 filters of 8 x 8 with stride 4 and applies ReLU activation function. The 2nd layer convolves a 64 filters of 4 x 4 with stride 2 and applies ReLU activation function. The 3rd layer convolves a 64 filters of 3 x 3 with stride 1 and applies ReLU activation function. The final hidden layer is fully-connected consisted of 512 rectifier units. The output layer is a fully-connected linear layer with a single output for each valid action.
 
+So wait, what is convolution? The easiest way to understand a convolution is by thinking of it as a sliding window function apply to a matrix. The following gif file should help to understand.
+
+You might ask what's the purpose the convolution? It actually helps computer to learn higher features like edges and shapes. See the example below:
+
+
+
 Keras makes it very easy to build convolution neural network. However, there are few things I would like to highlight here
 
 1. It is important to choose a right initialization method. Here I choose normal distribution with $sigma=0.01$
@@ -129,9 +135,7 @@ So, what is Q-learning? In Q-learning what matters is a Q function : Q(s, a) rep
 
 Suppose you are playing a difficult RPG game and you don't know how to play it well. If you have bought a Strategy guide, which is an instruction books that contain hints or complete solutions to a specific video games. Then playing video game is easy. You just follow the guidience of the strategy book. Here, Q-function is like a strategy guide. Suppose you are in state and you need to decide whether you take action a or b. If you have this magical Q-function, the answer will become really siomple -- pick the action with highest Q-value!
 
-$$
-\pi(s) = argmax Q(s,a)
-$$
+$$\pi(s) = argmax Q(s,a)$$
 
 Here, $\pi$ represents the policy, you will often see that in the literature.
 
@@ -163,7 +167,9 @@ $$
 
 In plain English, it means maximum future reward for this state and action is the immediate reward plus maximum future reward for the next state.
 
-Now, we could use iterative method to solve the Q-function. Given a transition $<s, a, r, s^'>$ , we can define a loss function below
+Now, we could use iterative method to solve the Q-function. Given a transition $<s, a, r, s^'>$ , we are going to convert this episode into training set for the network. i.e. We want $r + \gamma max_a Q (s,a)$ to be equal to $Q(s,a)$
+
+we can define a loss function below
 
 $$
 L = {r + max Q(s, a) - Q (s, a)}^2
@@ -171,7 +177,7 @@ $$
 
 You can think of finding a Q-value is regression task now. Given a transition $<s, a, r, s^'>$, how can I optimized my Q-function such that it return smallest simple squared error loss? If L goes to zero, it means, the Q-function is converged into the optimal value, which is our "strategy book" we need.
 
-Now, you might ask, hey, where is the role of the neural network? Here is where the "DEEP Q-Learning" coming. You recall that $Q(s,a)$, is a stategy book, which contains millions or trillions of states and actions, if you implemented as a table. The idea of the DQN is that I use the neural network to **COMPRESS** this Q-table, using some parameters $\theta$ [In neural network we called it weight]. So instead of handle a large table, I just need to worry the weights of the neural network. But hopefully I smartly tune the weight parameters, I can find the optimal Q-function.
+Now, you might ask, hey, where is the role of the neural network? Here is where the "DEEP Q-Learning" coming. You recall that $Q(s,a)$, is a stategy book, which contains millions or trillions of states and actions, if you implemented as a table. The idea of the DQN is that I use the neural network to **COMPRESS** this Q-table, using some parameters $\theta$ [In neural network we called it weight]. So instead of handle a large table, I just need to worry the weights of the neural network going forward. But hopefully I smartly tune the weight parameters, I can find the optimal Q-function.
 
 $$
 Q(s,a) = f_{\theta}(s)
@@ -213,9 +219,42 @@ Here is the code below to demostrate how it works
         t = t + 1
 ``` 
 
+If you examine the code above, there is a comment called "Experience Replay". Let me explain what it does: It was found that approximation of Q-value using non-linear functions like neural network is not very stable. The most important trick to solve this problem is called **experience replay**. During the gameplay all the episode $<s, a, r, s^'>$ are stored in replay memory D. [I use Python function deque() to store it]. When training the network, random minibatch from the replay memory are used instead of most recent transition, which will greatly improve the stability.
+
+That's it. I hope this small tutorial will help you to understand how DQN works. 
 
 
+# FAQ
 
+## My training is very slow
+
+You might need a GPU to accelerate the calculation. I used a TITAN X and train for at least 1 million frame to make it work
+
+# Future works and thinking
+
+1. Current DQN depends on large experience replay. Is it possible to replace it or even remove it?
+2. How can one decide optimal Convolution Neural Network?
+3. Training is very slow, how to speed it up/converge faster?
+4. What does the Neural Network actually learnt? Is the knowledge transferable?
+
+I believe the questions still not resolved and it's an active research area in Machine Learning.
+
+
+# Reference
+
+[1] Mnih Volodymyr, Koray Kavukcuoglu, David Silver, Andrei A. Rusu, Joel Veness, Marc G. Bellemare, Alex Graves, Martin Riedmiller, Andreas K. Fidjeland, Georg Ostrovski, Stig Petersen, Charles Beattie, Amir Sadik, Ioannis Antonoglou, Helen King, Dharshan Kumaran, Daan Wierstra, Shane Legg, and Demis Hassabis. **Human-level Control through Deep Reinforcement Learning**. Nature, 529-33, 2015.
+
+#Disclaimer
+
+This work is highly based on the following repos:
+
+1. https://github.com/yenchenlin/DeepLearningFlappyBird
+
+2. http://edersantana.github.io/articles/keras_rl/
+
+#Acknowledgement
+
+I must thank to @hardmaru to encourage me to write this blog. I also thank to @fchollet to help me on the weight initialization in Keras and @edersantana his post on Keras and reinforcement learning which really help me to understand it.
 
 
 
