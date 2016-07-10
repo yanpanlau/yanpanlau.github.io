@@ -135,7 +135,7 @@ So, what is Q-learning? In Q-learning what matters is a Q function : Q(s, a) rep
 
 Suppose you are playing a difficult RPG game and you don't know how to play it well. If you have bought a Strategy guide, which is an instruction books that contain hints or complete solutions to a specific video games. Then playing video game is easy. You just follow the guidience of the strategy book. Here, Q-function is like a strategy guide. Suppose you are in state and you need to decide whether you take action a or b. If you have this magical Q-function, the answer will become really siomple -- pick the action with highest Q-value!
 
-$$\pi(s) = argmax Q(s,a)$$
+$$ \pi(s) = argmax Q(s,a) $$
 
 Here, $\pi$ represents the policy, you will often see that in the literature.
 
