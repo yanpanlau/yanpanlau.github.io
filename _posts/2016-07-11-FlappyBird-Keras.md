@@ -3,11 +3,13 @@ layout: post
 title: Using Keras and Deep Q-Network to Play Flappy Bird
 ---
 
+A single 200 lines python code to demostrate DQN using Keras
+
 # Overview
 
 This project demostrated how to use Deep-Q Learning algorithm with Keras together to play Flappy Bird.
 
-It is my first project in Machine Learning and intented to target new-comer who is interested in Reinforcement Learning.
+It is my first project in Machine Learning and intented to target new-comers who are interested in Reinforcement Learning.
 
 # Installation Dependencies:
 
@@ -105,7 +107,7 @@ def buildmodel():
     return model
 ```
 
-The exact architecture is as follows : The input to the neural network consistes of an 4x80x80 images. The first hidden layer convolves 32 filters of 8 x 8 with stride 4 and applies ReLU activation function. The 2nd layer convolves a 64 filters of 4 x 4 with stride 2 and applies ReLU activation function. The 3rd layer convolves a 64 filters of 3 x 3 with stride 1 and applies ReLU activation function. The final hidden layer is fully-connected consisted of 512 rectifier unites. The output layer is a fully-connected linear layer with a single output for each valid action.
+The exact architecture is as follows : The input to the neural network consistes of an 4x80x80 images. The first hidden layer convolves 32 filters of 8 x 8 with stride 4 and applies ReLU activation function. The 2nd layer convolves a 64 filters of 4 x 4 with stride 2 and applies ReLU activation function. The 3rd layer convolves a 64 filters of 3 x 3 with stride 1 and applies ReLU activation function. The final hidden layer is fully-connected consisted of 512 rectifier units. The output layer is a fully-connected linear layer with a single output for each valid action.
 
 Keras makes it very easy to build convolution neural network. However, there are few things I would like to highlight here
 
@@ -116,5 +118,106 @@ init=lambda shape, name: normal(shape, scale=0.01, name=name)
 ```
 
 2. The ordering of the dimension is important, the default setting is 4x80x80 (Theano setting) so if you input as 80x80x4 (Tensorflow setting) then you are in trouble. If your input dimension is 80x80x4 you need to set $dim_ordering = tf$ (tf means tensorflow)
+
+3. In Keras, the subsample=(2,2) means you downsample the image size from (80x80) to (40x40). In literature it is often called "stride"
+
+4. We have used an adaptive learning algorithm called ADAM to do the optimization. The learning rate is 1-e6. 
+
+Finally, we can using the Q-learning algorithm to train the neural network.
+
+So, what is Q-learning? In Q-learning what matters is a Q function : Q(s, a) representing the maximum discounted future reward when we perform action a in a state s. Q(s, a) gives you an estimation of how good to choose an action a in a state s. Now, you might ask 1) Why Q-function is useful? 2) How can I get the Q-function?
+
+Suppose you are playing a difficult RPG game and you don't know how to play it well. If you have bought a Strategy guide, which is an instruction books that contain hints or complete solutions to a specific video games. Then playing video game is easy. You just follow the guidience of the strategy book. Here, Q-function is like a strategy guide. Suppose you are in state and you need to decide whether you take action a or b. If you have this magical Q-function, the answer will become really siomple -- pick the action with highest Q-value!
+
+$$
+\pi(s) = argmax Q(s,a)
+$$
+
+Here, $\pi$ represents the policy, you will often see that in the literature.
+
+Now, how do we get the Q-function then? That's where is Q-learning coming from. Here I quickly derive it:
+
+Define discounted future reward
+
+$$
+R_t = r_t + \gamma r_{t+1} + \gamma^{2} r_{t+2} ... + \gamma^{n-t} r_n
+$$
+
+which, can be also written as
+
+$$
+R_t = r_t + \gamma * R_{t+1}
+$$
+
+As we discuss above, the definition of Q-function is below
+
+$$
+Q(s_t, a_t) = max R_{t+1}
+$$
+
+therefore, we can re-write the Q-fuction as below
+
+$$
+Q(s, a) = r + \gamma * max_{a^'} Q(s^', a^')
+$$
+
+In plain English, it means maximum future reward for this state and action is the immediate reward plus maximum future reward for the next state.
+
+Now, we could use iterative method to solve the Q-function. Given a transition $<s, a, r, s^'>$ , we can define a loss function below
+
+$$
+L = {r + max Q(s, a) - Q (s, a)}^2
+$$
+
+You can think of finding a Q-value is regression task now. Given a transition $<s, a, r, s^'>$, how can I optimized my Q-function such that it return smallest simple squared error loss? If L goes to zero, it means, the Q-function is converged into the optimal value, which is our "strategy book" we need.
+
+Now, you might ask, hey, where is the role of the neural network? Here is where the "DEEP Q-Learning" coming. You recall that $Q(s,a)$, is a stategy book, which contains millions or trillions of states and actions, if you implemented as a table. The idea of the DQN is that I use the neural network to **COMPRESS** this Q-table, using some parameters $\theta$ [In neural network we called it weight]. So instead of handle a large table, I just need to worry the weights of the neural network. But hopefully I smartly tune the weight parameters, I can find the optimal Q-function.
+
+$$
+Q(s,a) = f_{\theta}(s)
+$$
+
+where $f$ is our neural network with input $s$ and parameters $\theta$
+
+Here is the code below to demostrate how it works
+```python
+        if t > OBSERVE:
+            #sample a minibatch to train on
+            minibatch = random.sample(D, BATCH)
+
+            inputs = np.zeros((BATCH, s_t.shape[1], s_t.shape[2], s_t.shape[3]))   #32, 80, 80, 4
+            targets = np.zeros((inputs.shape[0], ACTIONS))                         #32, 2
+
+            #Now we do the experience replay
+            for i in range(0, len(minibatch)):
+                state_t = minibatch[i][0]
+                action_t = minibatch[i][1]   #This is action index
+                reward_t = minibatch[i][2]
+                state_t1 = minibatch[i][3]
+                terminal = minibatch[i][4]
+                # if terminated, only equals reward
+
+                inputs[i:i + 1] = state_t    #I saved down s_t
+
+                targets[i] = model.predict(state_t)  # Hitting each buttom probability
+                Q_sa = model.predict(state_t1)
+
+                if terminal:
+                    targets[i, action_t] = reward_t
+                else:
+                    targets[i, action_t] = reward_t + GAMMA * np.max(Q_sa)
+
+            loss += model.train_on_batch(inputs, targets)
+
+        s_t = s_t1
+        t = t + 1
+``` 
+
+
+
+
+
+
+
 
 
