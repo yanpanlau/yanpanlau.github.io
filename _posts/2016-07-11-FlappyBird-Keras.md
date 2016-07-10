@@ -23,7 +23,9 @@ It is my first project in Machine Learning and intented to target new-comer who 
 CPU only
 	```
 	git clone https://github.com/yanpanlau/Keras-FlappyBird.git
+
 	cd Keras-FlappyBird
+	
 	python qlearn.py
 	```
 
@@ -33,7 +35,7 @@ GPU version (Theano)
 	cd Keras-FlappyBird
 	THEANO_FLAGS=device=gpu,floatX=float32,lib.cnmem=0.2 python qlearn.py
 	```
-	
+
 lib.cnmem=0.2 means you assign 20% of the GPU memory to this programme
 
 # What is Deep Q-Network?
