@@ -21,20 +21,20 @@ It is my first project in Machine Learning and intented to target new-comer who 
 # How to Run?
 
 CPU only
-	```
-	git clone https://github.com/yanpanlau/Keras-FlappyBird.git
 
-	cd Keras-FlappyBird
-	
-	python qlearn.py
-	```
+```
+git clone https://github.com/yanpanlau/Keras-FlappyBird.git
+cd Keras-FlappyBird
+python qlearn.py
+```
 
 GPU version (Theano)
-	```
-	git clone https://github.com/yanpanlau/Keras-FlappyBird.git
-	cd Keras-FlappyBird
-	THEANO_FLAGS=device=gpu,floatX=float32,lib.cnmem=0.2 python qlearn.py
-	```
+
+```
+git clone https://github.com/yanpanlau/Keras-FlappyBird.git
+cd Keras-FlappyBird
+THEANO_FLAGS=device=gpu,floatX=float32,lib.cnmem=0.2 python qlearn.py
+```
 
 lib.cnmem=0.2 means you assign 20% of the GPU memory to this programme
 
