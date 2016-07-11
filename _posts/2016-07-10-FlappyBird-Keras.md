@@ -189,12 +189,12 @@ $$
 
 In plain English, it means maximum future reward for this state and action (s,a) is the immediate reward r **plus** maximum future reward for the next state $$s^{'}$$ , action $$a^{'}$$
 
-We could now use iterative method to solve the Q-function. Given a transition $$<s, a, r, s^'>$$ , we are going to convert this episode into training set for the network. i.e. We want $$r + \gamma max_a Q (s,a)$$ to be equal to $Q(s,a)$
+We could now use iterative method to solve the Q-function. Given a transition $$<s, a, r, s^'>$$ , we are going to convert this episode into training set for the network. i.e. We want $$r + \gamma max_a Q (s,a)$$ to be equal to $$Q(s,a)$$
 
 Define a loss function below
 
 $$
-L = \left \{r + max Q(s, a) - Q (s, a) \right \}^2
+L = [\underbrace{r + max_a{'}Q(s^{'},a^{'})}_\text{target} - \underbrace{Q(s,a)}_text{prediction}]^{2}
 $$
 
 You can think of finding a Q-value is a regression task now. Given a transition $$<s, a, r, s^'>$$, how can I optimized my Q-function such that it return smallest mean squared error loss? If L getting smaller, the Q-function is getting converged into the optimal value, which is our "strategy book".
