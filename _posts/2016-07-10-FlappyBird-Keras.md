@@ -66,7 +66,7 @@ First of all, the FlappyBird is already written in Python via pygame, here is th
 import wrapped_flappy_bird as game
 x_t1_colored, r_t, terminal = game_state.frame_step(a_t)
 ```
-So the idea is very simple, the input is a_t (0 represent don't flap, 1 represent flap), the API will give you the next frame **x_t1_colored**, the reward (0.1 if alive, +1 if pass the pipe, -1 if die) and 'terminal' indicates whether it is GAMEOVER or not.
+So the idea is very simple, the input is a_t (0 represent don't flap, 1 represent flap), the API will give you the next frame x_t1_colored, the reward (0.1 if alive, +1 if pass the pipe, -1 if die) and 'terminal' indicates whether it is GAMEOVER or not.
 
 ### Image pre-processing
 
@@ -129,17 +129,17 @@ For more details about Convolution in Neural Network, please read [Understanding
 
 Keras makes it very easy to build convolution neural network. However, there are few things I would like to highlight
 
-*It is important to choose a right initialization method. I choose normal distribution with $$\sigma=0.01$$
+A) It is important to choose a right initialization method. I choose normal distribution with $$\sigma=0.01$$
 
 ```python
 init=lambda shape, name: normal(shape, scale=0.01, name=name)
 ```
 
-*The ordering of the dimension is important, the default setting is 4x80x80 (Theano setting) therefore if your input as 80x80x4 (Tensorflow setting) then you are in trouble. If your input dimension is 80x80x4 you need to set **dim_ordering = tf**(tf means tensorflow, th means theano)
+B) The ordering of the dimension is important, the default setting is 4x80x80 (Theano setting) therefore if your input as 80x80x4 (Tensorflow setting) then you are in trouble. If your input dimension is 80x80x4 you need to set **dim_ordering = tf**  (tf means tensorflow, th means theano)
 
-*In Keras, **subsample=(2,2)** means you downsample the image size from (80x80) to (40x40). In ML literature it is often called "stride"
+C) In Keras, **subsample=(2,2)** means you downsample the image size from (80x80) to (40x40). In ML literature it is often called "stride"
 
-*We have used an adaptive learning algorithm called ADAM to do the optimization. The learning rate is **1-e6**. 
+D) We have used an adaptive learning algorithm called ADAM to do the optimization. The learning rate is **1-e6**. 
 
 ### DQN
 
@@ -151,7 +151,7 @@ You might ask 1) Why Q-function is useful? 2) How can I get the Q-function?
 
 Suppose you are playing a difficult RPG game and you don't know how to play it well. If you have bought a strategy guide, which is an instruction books that contain hints or complete solutions to a specific video games, then playing video game is easy. You just follow the guidience from the strategy book. Here, Q-function is similiar to strategy guide. Suppose you are in state **s** and you need to decide whether you take action **a** or **b**. If you have this magical Q-function, the answer become really simple -- pick the action with highest Q-value!
 
-$$ \pi(s) = \underset{a}{argmax} Q(s,a) $$
+$$ \pi(s) = {argmax}_{a} Q(s,a) $$
 
 Here, $$\pi$$ represents the policy, you will often see that in the ML literature.
 
