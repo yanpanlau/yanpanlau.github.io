@@ -117,11 +117,11 @@ The exact architecture is following : The input to the neural network consists o
 
 So wait, what is convolution? The easiest way to understand a convolution is by thinking of it as a sliding window function apply to a matrix. The following gif file should help to understand.
 
-![Convolution with 3×3 Filter. Source: http://deeplearning.stanford.edu/wiki/index.php/Feature_extraction_using_convolution](/img/Convolution_schematic.gif)
+![Convolution with 3×3 Filter. Source: http://deeplearning.stanford.edu/wiki/index.php/Feature_extraction_using_convolution](/img/Convolution_schematic.gif){: .center-image }
 
-You might ask what's the purpose the convolution? It actually help computer to learn higher features like edges and shapes. See the example below:
+You might ask what's the purpose the convolution? It actually help computer to learn higher features like edges and shapes. The example below shows how the edges are stand out after a convolution filter is applied
 
-![Using Convolution to detect Edges](/img/generic-taj-convmatrix-edge-detect.jpg)
+![Using Convolution to detect Edges](/img/generic-taj-convmatrix-edge-detect.jpg){: .center-image }
 
 For more details about Convolution in Neural Network, please read [Understanding Convolution Neural Networks for NLP](http://www.wildml.com/2015/11/understanding-convolutional-neural-networks-for-nlp/)
 
@@ -228,7 +228,7 @@ if t > OBSERVE:
         terminal = minibatch[i][4]
         # if terminated, only equals reward
 
-        nputs[i:i + 1] = state_t    #I saved down s_t
+        inputs[i:i + 1] = state_t    #I saved down s_t
 
         targets[i] = model.predict(state_t)  # Hitting each buttom probability
         Q_sa = model.predict(state_t1)
