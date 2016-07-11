@@ -193,6 +193,11 @@ We could now use iterative method to solve the Q-function. Given a transition $$
 
 Define a loss function 
 
+$$
+\underbrace{Q(s,a)}_{prediction}
+$$
+
+
 
 You can think of finding a Q-value is a regression task now. Given a transition $$ (s, a, r, s^{'}) $$, how can I optimized my Q-function such that it return smallest mean squared error loss? If L getting smaller, the Q-function is getting converged into the optimal value, which is our "strategy book".
 
