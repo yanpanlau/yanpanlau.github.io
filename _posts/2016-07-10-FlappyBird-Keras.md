@@ -194,7 +194,7 @@ We could now use iterative method to solve the Q-function. Given a transition  ,
 Define a loss function below
 
 $$
-Q(s, a) = r + \gamma * max_{a^{'}} Q(s^{'}, a^{'})
+L = \underbrace{}_\text{target} - \underbrace{Q(s,a)}_text{prediction}
 $$
 
 
