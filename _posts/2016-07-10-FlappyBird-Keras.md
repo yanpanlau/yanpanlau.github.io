@@ -201,17 +201,17 @@ $$
 
 You can think of finding a Q-value is a regression task now. Given a transition $$ (s, a, r, s^{'}) $$, how can I optimized my Q-function such that it return smallest mean squared error loss? If L getting smaller, the Q-function is getting converged into the optimal value, which is our "strategy book".
 
-Now, you might ask, where is the role of the neural network? This is where the **DEEP Q-Learning** coming. You recall that $$Q(s,a)$$, is a stategy book, which contains millions or trillions of states and actions, if you implemented as a table. The idea of the DQN is that I use the neural network to **COMPRESS** this Q-table, using some parameters $$\theta$$ **(We called it weight in Neural Network)**. So instead of handle a large table, I just need to worry the weights of the neural network. By smartly tuning the weight parameters, I can find the optimal Q-function via the various Neural Network training algorithm.
+Now, you might ask, where is the role of the neural network? This is where the **DEEP Q-Learning** coming. You recall that $$Q(s,a)$$, is a stategy book, which contains millions or trillions of states and actions, if you implemented as a table. The idea of the DQN is that I use the neural network to **COMPRESS** this Q-table, using some parameters $$\theta$$ **(We called it weight in Neural Network)**. So instead of handling a large table, I just need to worry the weights of the neural network. By smartly tuning the weight parameters, I can find the optimal Q-function via the various Neural Network training algorithm.
 
 $$
 Q(s,a) = f_{\theta}(s)
 $$
 
-where $$f$$ is our neural network with input $$s$$ and weight parameters $\theta$
+where $$f$$ is our neural network with input $$s$$ and weight parameters $$\theta$$
 
 Here is the code below to demostrate how it works
-```python
 
+```python
 if t > OBSERVE:
     #sample a minibatch to train on
     minibatch = random.sample(D, BATCH)
@@ -242,7 +242,6 @@ if t > OBSERVE:
 
     s_t = s_t1
     t = t + 1
-
 ``` 
 
 ### Experience Replay
