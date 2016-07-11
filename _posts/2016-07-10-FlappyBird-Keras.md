@@ -117,11 +117,11 @@ The exact architecture is following : The input to the neural network consists o
 
 So wait, what is convolution? The easiest way to understand a convolution is by thinking of it as a sliding window function apply to a matrix. The following gif file should help to understand.
 
-![Convolution with 3×3 Filter. Source: http://deeplearning.stanford.edu/wiki/index.php/Feature_extraction_using_convolution](Convolution_schematic.gif)
+![Convolution with 3×3 Filter. Source: http://deeplearning.stanford.edu/wiki/index.php/Feature_extraction_using_convolution](/img/Convolution_schematic.gif)
 
 You might ask what's the purpose the convolution? It actually help computer to learn higher features like edges and shapes. See the example below:
 
-![Using Convolution to detect Edges](generic-taj-convmatrix-edge-detect.jpg)
+![Using Convolution to detect Edges](/img/generic-taj-convmatrix-edge-detect.jpg)
 
 For more details about Convolution in Neural Network, please read [Understanding Convolution Neural Networks for NLP](http://www.wildml.com/2015/11/understanding-convolutional-neural-networks-for-nlp/)
 
@@ -129,17 +129,17 @@ For more details about Convolution in Neural Network, please read [Understanding
 
 Keras makes it very easy to build convolution neural network. However, there are few things I would like to highlight
 
-1. It is important to choose a right initialization method. I choose normal distribution with $\sigma=0.01$
+*It is important to choose a right initialization method. I choose normal distribution with $$\sigma=0.01$$
 
 ```python
 init=lambda shape, name: normal(shape, scale=0.01, name=name)
 ```
 
-2. The ordering of the dimension is important, the default setting is 4x80x80 (Theano setting) therefore if your input as 80x80x4 (Tensorflow setting) then you are in trouble. If your input dimension is 80x80x4 you need to set **dim_ordering = tf**(tf means tensorflow, th means theano)
+*The ordering of the dimension is important, the default setting is 4x80x80 (Theano setting) therefore if your input as 80x80x4 (Tensorflow setting) then you are in trouble. If your input dimension is 80x80x4 you need to set **dim_ordering = tf**(tf means tensorflow, th means theano)
 
-3. In Keras, **subsample=(2,2)** means you downsample the image size from (80x80) to (40x40). In ML literature it is often called "stride"
+*In Keras, **subsample=(2,2)** means you downsample the image size from (80x80) to (40x40). In ML literature it is often called "stride"
 
-4. We have used an adaptive learning algorithm called ADAM to do the optimization. The learning rate is **1-e6**. 
+*We have used an adaptive learning algorithm called ADAM to do the optimization. The learning rate is **1-e6**. 
 
 ### DQN
 
