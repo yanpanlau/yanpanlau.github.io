@@ -1,13 +1,13 @@
 ---
 layout: post
-title: Using Keras and Deep Q-Network to Play Flappy Bird
+title: Using Keras and Deep Q-Network to Play FlappyBird
 ---
 
-A single 200 lines python code to demostrate DQN using Keras
+A single 200 lines of python code to demostrate DQN with Keras
 
 # Overview
 
-This project demostrated how to use Deep-Q Learning algorithm with Keras together to play Flappy Bird.
+This project demostrated how to use Deep-Q Learning algorithm with Keras together to play FlappyBird.
 
 This is my first project in Machine Learning and intented to target new-comers who are interested in Reinforcement Learning.
 
@@ -20,7 +20,7 @@ This is my first project in Machine Learning and intented to target new-comers w
 
 # How to Run?
 
-CPU only
+**CPU only**
 
 ```
 git clone https://github.com/yanpanlau/Keras-FlappyBird.git
@@ -28,7 +28,7 @@ cd Keras-FlappyBird
 python qlearn.py
 ```
 
-GPU version (Theano)
+**GPU version (Theano)**
 
 ```
 git clone https://github.com/yanpanlau/Keras-FlappyBird.git
@@ -36,43 +36,47 @@ cd Keras-FlappyBird
 THEANO_FLAGS=device=gpu,floatX=float32,lib.cnmem=0.2 python qlearn.py
 ```
 
-'lib.cnmem=0.2' means you assign 20% of the GPU memory to this programme
+**lib.cnmem=0.2** means you assign 20% of the GPU memory to the programme
 
 # What is Deep Q-Network?
 
 Deep Q-Network is a learning algorithm developed by Google DeepMind team to play Atari games.
 
-For those who are interested in deep reinforcement learning, The following post is a must-read
+The following post is a must-read for those who are interested in deep reinforcement learning.
 
 [Demystifying Deep Reinforcement Learning](https://www.nervanasys.com/demystifying-deep-reinforcement-learning/)
 
 
-# Code Explaination (in details)
+# Code Explanation (in details)
 
-Let's go though the example in 'qlearn.py', line by line. If you familiar with Keras and DQN, please skip this session
+Let's go though the example in **qlearn.py**, line by line. If you familiar with Keras and DQN, you can skip this session
 
-Here is what the code does: 
+The code simply do the following:
 
-1. I receive the Game Screen Input (Image) in a form of pixel array
-2. I do some image pre-processing 
-3. The processed image will be feed into a neural network (Convolution Neural Network), and the network will decide the best action (Flap or not Flap)
-4. The neural network will be trained millions of times, via a algorithm called Q-learning, to maximize the future expected rewards.
+1. The code received the Game Screen Input in form of pixel array
+2. The code do some image pre-processing 
+3. The processed image will be feed into a neural network (Convolution Neural Network), and the network will decide the best action to execute (Flap or Not Flap)
+4. The neural network will be trained millions of times, via an algorithm called Q-learning, to maximize the future expected rewards.
 
-First of all, the FlappyBird is already written in Python via Pygame, here is the code snippet to access the FlappyBird API
+### Game Screen Input
+
+First of all, the FlappyBird is already written in Python via pygame, here is the code snippet to access the FlappyBird API
 
 ```python
 import wrapped_flappy_bird as game
 x_t1_colored, r_t, terminal = game_state.frame_step(a_t)
 ```
-So the idea is very simple, the input is a_t (0 represent not flapped, 1 represent flapped), then the API will give you the next frame 'x_t1_colored', the reward (0.1 is not die, -100 if die) and 'terminal' indicates whether GAMEOVER or not.
+So the idea is very simple, the input is a_t (0 represent don't flap, 1 represent flap), the API will give you the next frame **x_t1_colored**, the reward (0.1 if alive, +1 if pass the pipe, -1 if die) and 'terminal' indicates whether it is GAMEOVER or not.
 
-Now, in order to make the code run faster and converge faster, it is vital to do some image processing. Here are the key elements
+### Image pre-processing
+
+In order to make the code run faster and train faster, it is vital to do some image processing. Here are the key elements:
 
 1. I first convert the color image into grayscale
-2. I corp down the image size into standard 80x80 pixel
+2. I corp down the image size into 80x80 pixel
 3. I stack 4 frames together before I feed into neural network. 
 
-So why do I need to stack 4 frames? This is one way to provide "velocity" information of the bird.
+Why do I need to stack 4 frames? This is one way to provide "velocity" information of the bird.
 
 ```python
 x_t1 = skimage.color.rgb2gray(x_t1_colored)
@@ -82,9 +86,11 @@ x_t1 = skimage.exposure.rescale_intensity(x_t1, out_range=(0, 255))
 x_t1 = x_t1.reshape(1, 1, x_t1.shape[0], x_t1.shape[1])
 s_t1 = np.append(x_t1, s_t[:, :3, :, :], axis=1)
 ```
-So x_t1 is a single frame with shape (1x1x80x80) and s_t1 is the stacked frame with shape (1x4x80x80). You might asked, why the input dimension is (1x4x80x80) but not (4x80x80)? Well, it was an requirement in Keras.
+x_t1 is a single frame with shape (1x1x80x80) and s_t1 is the stacked frame with shape (1x4x80x80). You might ask, why the input dimension is (1x4x80x80) but not (4x80x80)? Well, it was a requirement in Keras so let's stick with it.
 
-Now, We can input the pre-processed screen into the neural network, which is a convolution neural network:
+### Convolution Neural Network
+
+Now, we can input the pre-processed screen into the neural network, which is a convolution neural network:
 
 ```python
 def buildmodel():
@@ -107,128 +113,148 @@ def buildmodel():
     return model
 ```
 
-The exact architecture is as follows : The input to the neural network consistes of an 4x80x80 images. The first hidden layer convolves 32 filters of 8 x 8 with stride 4 and applies ReLU activation function. The 2nd layer convolves a 64 filters of 4 x 4 with stride 2 and applies ReLU activation function. The 3rd layer convolves a 64 filters of 3 x 3 with stride 1 and applies ReLU activation function. The final hidden layer is fully-connected consisted of 512 rectifier units. The output layer is a fully-connected linear layer with a single output for each valid action.
+The exact architecture is following : The input to the neural network consists of an 4x80x80 images. The first hidden layer convolves 32 filters of 8 x 8 with stride 4 and applies ReLU activation function. The 2nd layer convolves a 64 filters of 4 x 4 with stride 2 and applies ReLU activation function. The 3rd layer convolves a 64 filters of 3 x 3 with stride 1 and applies ReLU activation function. The final hidden layer is fully-connected consisted of 512 rectifier units. The output layer is a fully-connected linear layer with a single output for each valid action.
 
 So wait, what is convolution? The easiest way to understand a convolution is by thinking of it as a sliding window function apply to a matrix. The following gif file should help to understand.
 
-You might ask what's the purpose the convolution? It actually helps computer to learn higher features like edges and shapes. See the example below:
+![Convolution with 3×3 Filter. Source: http://deeplearning.stanford.edu/wiki/index.php/Feature_extraction_using_convolution](Convolution_schematic.gif)
 
+You might ask what's the purpose the convolution? It actually help computer to learn higher features like edges and shapes. See the example below:
 
+![Using Convolution to detect Edges](generic-taj-convmatrix-edge-detect.jpg)
 
-Keras makes it very easy to build convolution neural network. However, there are few things I would like to highlight here
+For more details about Convolution in Neural Network, please read [Understanding Convolution Neural Networks for NLP](http://www.wildml.com/2015/11/understanding-convolutional-neural-networks-for-nlp/)
 
-1. It is important to choose a right initialization method. Here I choose normal distribution with $sigma=0.01$
+### Note
 
-```
+Keras makes it very easy to build convolution neural network. However, there are few things I would like to highlight
+
+1. It is important to choose a right initialization method. I choose normal distribution with $\sigma=0.01$
+
+```python
 init=lambda shape, name: normal(shape, scale=0.01, name=name)
 ```
 
-2. The ordering of the dimension is important, the default setting is 4x80x80 (Theano setting) so if you input as 80x80x4 (Tensorflow setting) then you are in trouble. If your input dimension is 80x80x4 you need to set $dim_ordering = tf$ (tf means tensorflow)
+2. The ordering of the dimension is important, the default setting is 4x80x80 (Theano setting) therefore if your input as 80x80x4 (Tensorflow setting) then you are in trouble. If your input dimension is 80x80x4 you need to set **dim_ordering = tf**(tf means tensorflow, th means theano)
 
-3. In Keras, the subsample=(2,2) means you downsample the image size from (80x80) to (40x40). In literature it is often called "stride"
+3. In Keras, **subsample=(2,2)** means you downsample the image size from (80x80) to (40x40). In ML literature it is often called "stride"
 
-4. We have used an adaptive learning algorithm called ADAM to do the optimization. The learning rate is 1-e6. 
+4. We have used an adaptive learning algorithm called ADAM to do the optimization. The learning rate is **1-e6**. 
+
+### DQN
 
 Finally, we can using the Q-learning algorithm to train the neural network.
 
-So, what is Q-learning? In Q-learning what matters is a Q function : Q(s, a) representing the maximum discounted future reward when we perform action a in a state s. Q(s, a) gives you an estimation of how good to choose an action a in a state s. Now, you might ask 1) Why Q-function is useful? 2) How can I get the Q-function?
+So, what is Q-learning? In Q-learning the most important thing is the Q-function : Q(s, a) representing the maximum discounted future reward when we perform action **a** in state **s**. **Q(s, a)** gives you an estimation of how good to choose an action **a** in state **s**. 
 
-Suppose you are playing a difficult RPG game and you don't know how to play it well. If you have bought a Strategy guide, which is an instruction books that contain hints or complete solutions to a specific video games. Then playing video game is easy. You just follow the guidience of the strategy book. Here, Q-function is like a strategy guide. Suppose you are in state and you need to decide whether you take action a or b. If you have this magical Q-function, the answer will become really siomple -- pick the action with highest Q-value!
+You might ask 1) Why Q-function is useful? 2) How can I get the Q-function?
 
-$$ \pi(s) = argmax Q(s,a) $$
+Suppose you are playing a difficult RPG game and you don't know how to play it well. If you have bought a strategy guide, which is an instruction books that contain hints or complete solutions to a specific video games, then playing video game is easy. You just follow the guidience from the strategy book. Here, Q-function is similiar to strategy guide. Suppose you are in state **s** and you need to decide whether you take action **a** or **b**. If you have this magical Q-function, the answer become really simple -- pick the action with highest Q-value!
 
-Here, $\pi$ represents the policy, you will often see that in the literature.
+$$ \pi(s) = \underset{a}{argmax} Q(s,a) $$
 
-Now, how do we get the Q-function then? That's where is Q-learning coming from. Here I quickly derive it:
+Here, $$\pi$$ represents the policy, you will often see that in the ML literature.
 
-Define discounted future reward
+How do we get the Q-function? That's where Q-learning coming from. Let me quickly derive here:
+
+Define total future reward from time **t** onward
+
+$$
+R_t = r_t + r_{t+1} + r_{t+2} ... + r_n
+$$
+
+But because our environment is stochastic, we can never be sure, the more future we go, the more uncertain. Therefore, it is common to use **discount future reward** instead
 
 $$
 R_t = r_t + \gamma r_{t+1} + \gamma^{2} r_{t+2} ... + \gamma^{n-t} r_n
 $$
 
-which, can be also written as
+which, can be written as
 
 $$
 R_t = r_t + \gamma * R_{t+1}
 $$
 
-As we discuss above, the definition of Q-function is below
+Recall the definition of Q-function (maximum discounted future reward if we choose action **a** in state **s**)
 
 $$
 Q(s_t, a_t) = max R_{t+1}
 $$
 
-therefore, we can re-write the Q-fuction as below
+therefore, we can rewrite the Q-fuction as below
 
 $$
-Q(s, a) = r + \gamma * max_{a^'} Q(s^', a^')
+Q(s, a) = r + \gamma * max_{a^{'}} Q(s^{'}, a^{'})
 $$
 
-In plain English, it means maximum future reward for this state and action is the immediate reward plus maximum future reward for the next state.
+In plain English, it means maximum future reward for this state and action (s,a) is the immediate reward r **plus** maximum future reward for the next state $$s^{'}$$ , action $$a^{'}$$
 
-Now, we could use iterative method to solve the Q-function. Given a transition $<s, a, r, s^'>$ , we are going to convert this episode into training set for the network. i.e. We want $r + \gamma max_a Q (s,a)$ to be equal to $Q(s,a)$
+We could now use iterative method to solve the Q-function. Given a transition $$<s, a, r, s^'>$$ , we are going to convert this episode into training set for the network. i.e. We want $$r + \gamma max_a Q (s,a)$$ to be equal to $Q(s,a)$
 
-we can define a loss function below
+Define a loss function below
 
 $$
-L = {r + max Q(s, a) - Q (s, a)}^2
+L = \left \{r + max Q(s, a) - Q (s, a) \right \}^2
 $$
 
-You can think of finding a Q-value is regression task now. Given a transition $<s, a, r, s^'>$, how can I optimized my Q-function such that it return smallest simple squared error loss? If L goes to zero, it means, the Q-function is converged into the optimal value, which is our "strategy book" we need.
+You can think of finding a Q-value is a regression task now. Given a transition $$<s, a, r, s^'>$$, how can I optimized my Q-function such that it return smallest mean squared error loss? If L getting smaller, the Q-function is getting converged into the optimal value, which is our "strategy book".
 
-Now, you might ask, hey, where is the role of the neural network? Here is where the "DEEP Q-Learning" coming. You recall that $Q(s,a)$, is a stategy book, which contains millions or trillions of states and actions, if you implemented as a table. The idea of the DQN is that I use the neural network to **COMPRESS** this Q-table, using some parameters $\theta$ [In neural network we called it weight]. So instead of handle a large table, I just need to worry the weights of the neural network going forward. But hopefully I smartly tune the weight parameters, I can find the optimal Q-function.
+Now, you might ask, where is the role of the neural network? This is where the **DEEP Q-Learning** coming. You recall that $$Q(s,a)$$, is a stategy book, which contains millions or trillions of states and actions, if you implemented as a table. The idea of the DQN is that I use the neural network to **COMPRESS** this Q-table, using some parameters $$\theta$$ **(We called it weight in Neural Network)**. So instead of handle a large table, I just need to worry the weights of the neural network. By smartly tuning the weight parameters, I can find the optimal Q-function via the various Neural Network training algorithm.
 
 $$
 Q(s,a) = f_{\theta}(s)
 $$
 
-where $f$ is our neural network with input $s$ and parameters $\theta$
+where $$f$$ is our neural network with input $$s$$ and weight parameters $\theta$
 
 Here is the code below to demostrate how it works
 ```python
-        if t > OBSERVE:
-            #sample a minibatch to train on
-            minibatch = random.sample(D, BATCH)
 
-            inputs = np.zeros((BATCH, s_t.shape[1], s_t.shape[2], s_t.shape[3]))   #32, 80, 80, 4
-            targets = np.zeros((inputs.shape[0], ACTIONS))                         #32, 2
+if t > OBSERVE:
+    #sample a minibatch to train on
+    minibatch = random.sample(D, BATCH)
 
-            #Now we do the experience replay
-            for i in range(0, len(minibatch)):
-                state_t = minibatch[i][0]
-                action_t = minibatch[i][1]   #This is action index
-                reward_t = minibatch[i][2]
-                state_t1 = minibatch[i][3]
-                terminal = minibatch[i][4]
-                # if terminated, only equals reward
+    inputs = np.zeros((BATCH, s_t.shape[1], s_t.shape[2], s_t.shape[3]))   #32, 80, 80, 4
+    targets = np.zeros((inputs.shape[0], ACTIONS))                         #32, 2
 
-                inputs[i:i + 1] = state_t    #I saved down s_t
+    #Now we do the experience replay
+    for i in range(0, len(minibatch)):
+        state_t = minibatch[i][0]
+        action_t = minibatch[i][1]   #This is action index
+        reward_t = minibatch[i][2]
+        state_t1 = minibatch[i][3]
+        terminal = minibatch[i][4]
+        # if terminated, only equals reward
 
-                targets[i] = model.predict(state_t)  # Hitting each buttom probability
-                Q_sa = model.predict(state_t1)
+        nputs[i:i + 1] = state_t    #I saved down s_t
 
-                if terminal:
-                    targets[i, action_t] = reward_t
-                else:
-                    targets[i, action_t] = reward_t + GAMMA * np.max(Q_sa)
+        targets[i] = model.predict(state_t)  # Hitting each buttom probability
+        Q_sa = model.predict(state_t1)
 
-            loss += model.train_on_batch(inputs, targets)
+        if terminal:
+            targets[i, action_t] = reward_t
+        else:
+            targets[i, action_t] = reward_t + GAMMA * np.max(Q_sa)
 
-        s_t = s_t1
-        t = t + 1
+        loss += model.train_on_batch(inputs, targets)
+
+    s_t = s_t1
+    t = t + 1
+
 ``` 
 
-If you examine the code above, there is a comment called "Experience Replay". Let me explain what it does: It was found that approximation of Q-value using non-linear functions like neural network is not very stable. The most important trick to solve this problem is called **experience replay**. During the gameplay all the episode $<s, a, r, s^'>$ are stored in replay memory D. [I use Python function deque() to store it]. When training the network, random minibatch from the replay memory are used instead of most recent transition, which will greatly improve the stability.
+### Experience Replay
 
-That's it. I hope this small tutorial will help you to understand how DQN works. 
+If you examine the code above, there is a comment called "Experience Replay". Let me explain what it does: It was found that approximation of Q-value using non-linear functions like neural network is not very stable. The most important trick to solve this problem is called **experience replay**. During the gameplay all the episode $$<s, a, r, s^'>$$ are stored in replay memory **D**. (I use Python function deque() to store it). When training the network, random minibatch from the replay memory are used instead of most recent transition, which will greatly improve the stability.
+
+I think that's it. I hope this small blog will help you to understand how DQN works. 
 
 
 # FAQ
 
-## My training is very slow
+### My training is very slow
 
-You might need a GPU to accelerate the calculation. I used a TITAN X and train for at least 1 million frame to make it work
+You might need a GPU to accelerate the calculation. I used a TITAN X and train for at least 1 million frames to make it work
 
 # Future works and thinking
 
@@ -244,7 +270,7 @@ I believe the questions still not resolved and it's an active research area in M
 
 [1] Mnih Volodymyr, Koray Kavukcuoglu, David Silver, Andrei A. Rusu, Joel Veness, Marc G. Bellemare, Alex Graves, Martin Riedmiller, Andreas K. Fidjeland, Georg Ostrovski, Stig Petersen, Charles Beattie, Amir Sadik, Ioannis Antonoglou, Helen King, Dharshan Kumaran, Daan Wierstra, Shane Legg, and Demis Hassabis. **Human-level Control through Deep Reinforcement Learning**. Nature, 529-33, 2015.
 
-#Disclaimer
+# Disclaimer
 
 This work is highly based on the following repos:
 
