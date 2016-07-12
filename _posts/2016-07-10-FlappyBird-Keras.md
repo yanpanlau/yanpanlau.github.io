@@ -5,6 +5,8 @@ title: Using Keras and Deep Q-Network to Play FlappyBird
 
 A single 200 lines of python code to demostrate DQN with Keras
 
+![](/img/animation1.gif)
+
 # Overview
 
 This project demostrated how to use Deep-Q Learning algorithm with Keras together to play FlappyBird.
@@ -117,11 +119,11 @@ The exact architecture is following : The input to the neural network consists o
 
 So wait, what is convolution? The easiest way to understand a convolution is by thinking of it as a sliding window function apply to a matrix. The following gif file should help to understand.
 
-![Convolution with 3×3 Filter. Source: http://deeplearning.stanford.edu/wiki/index.php/Feature_extraction_using_convolution](/img/Convolution_schematic.gif){: .center-image }
+![Convolution with 3×3 Filter. Source: http://deeplearning.stanford.edu/wiki/index.php/Feature_extraction_using_convolution](/img/Convolution_schematic.gif)
 
 You might ask what's the purpose the convolution? It actually help computer to learn higher features like edges and shapes. The example below shows how the edges are stand out after a convolution filter is applied
 
-![Using Convolution to detect Edges](/img/generic-taj-convmatrix-edge-detect.jpg){: .center-image }
+![Using Convolution to detect Edges](/img/generic-taj-convmatrix-edge-detect.jpg)
 
 For more details about Convolution in Neural Network, please read [Understanding Convolution Neural Networks for NLP](http://www.wildml.com/2015/11/understanding-convolutional-neural-networks-for-nlp/)
 
@@ -281,7 +283,7 @@ http://edersantana.github.io/articles/keras_rl/
 
 # Acknowledgement
 
-I must thank to "@hardmaru" to encourage me to write this blog. I also thank to @fchollet to help me on the weight initialization in Keras and @edersantana his post on Keras and reinforcement learning which really help me to understand it.
+I must thank to @hardmaru to encourage me to write this blog. I also thank to @fchollet to help me on the weight initialization in Keras and @edersantana his post on Keras and reinforcement learning which really help me to understand it.
 
 
 
