@@ -27,7 +27,7 @@ This is my first project in Machine Learning and intented to target new-comers w
 ```
 git clone https://github.com/yanpanlau/Keras-FlappyBird.git
 cd Keras-FlappyBird
-python qlearn.py
+python qlearn.py -m "Run"
 ```
 
 **GPU version (Theano)**
@@ -35,10 +35,12 @@ python qlearn.py
 ```
 git clone https://github.com/yanpanlau/Keras-FlappyBird.git
 cd Keras-FlappyBird
-THEANO_FLAGS=device=gpu,floatX=float32,lib.cnmem=0.2 python qlearn.py
+THEANO_FLAGS=device=gpu,floatX=float32,lib.cnmem=0.2 python qlearn.py -m "Run"
 ```
 
 **lib.cnmem=0.2** means you assign 20% of the GPU memory to the programme
+
+If you want to train the network from beginning, delete the model.h5 and run qlearn.py -m "Train"
 
 # What is Deep Q-Network?
 
