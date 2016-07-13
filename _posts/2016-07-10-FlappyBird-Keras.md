@@ -70,7 +70,7 @@ First of all, the FlappyBird is already written in Python via pygame, so here is
 import wrapped_flappy_bird as game
 x_t1_colored, r_t, terminal = game_state.frame_step(a_t)
 ```
-The idea is quite simple, the input is **a_t** (0 represent don't flap, 1 represent flap), the API will give you the next frame x_t1_colored, the reward (0.1 if alive, +1 if pass the pipe, -1 if die) and 'terminal' is a boolean flag indicates whether the game is FINISHED or NOT. We also followed DeepMind suggestion to clip the reward between [-1,+1] to improve the stability. I have not yet get a chance to test out different reward functions but it would be an interesting exercise to see how the performance is changed with different reward function.
+The idea is quite simple, the input is **a_t** (0 represent don't flap, 1 represent flap), the API will give you the next frame **x_t1_colored**, the **reward** (0.1 if alive, +1 if pass the pipe, -1 if die) and **terminal** is a boolean flag indicates whether the game is FINISHED or NOT. We also followed DeepMind suggestion to clip the reward between [-1,+1] to improve the stability. I have not yet get a chance to test out different reward functions but it would be an interesting exercise to see how the performance is changed with different reward functions.
 
 Interesting readers can modify the reward function in **game/wrapped_flappy_bird.py", under the function **def frame_step(self, input_actions)**
 
@@ -94,7 +94,7 @@ s_t1 = np.append(x_t1, s_t[:, :3, :, :], axis=1)
 ```
 **x_t1** is a single frame with shape (1x1x80x80) and **s_t1** is the stacked frame with shape (1x4x80x80). You might ask, why the input dimension is (1x4x80x80) but not (4x80x80)? Well, it is a requirement in Keras so let's stick with it.
 
-Note: Some readers may ask what is **axis=1**? It means that when I stack the frames, I want to stack on the "2nd" dimension. i.e. I am stacking under (1x**4**x80x80)
+Note: Some readers may ask what is **axis=1**? It means that when I stack the frames, I want to stack on the "2nd" dimension. i.e. I am stacking under (1x**4**x80x80), the 2nd index.
 
 ### Convolution Neural Network
 
@@ -143,7 +143,7 @@ A) It is important to choose a right initialization method. I choose normal dist
 init=lambda shape, name: normal(shape, scale=0.01, name=name)
 ```
 
-B) The ordering of the dimension is important, the default setting is 4x80x80 (Theano setting), so if your input is 80x80x4 (Tensorflow setting) then you are in trouble because the dimension is wrong. Alert: If your input dimension is 80x80x4 (Tensorflow setting) you need to set **dim_ordering = tf**  (tf means tensorflow, th means theano)
+B) The ordering of the dimension is important, the default setting is 4x80x80 (Theano setting), so if your input is 80x80x4 (Tensorflow setting) then you are in trouble because the dimension is wrong. **Alert**: If your input dimension is 80x80x4 (Tensorflow setting) you need to set **dim_ordering = tf**  (tf means tensorflow, th means theano)
 
 C) In Keras, **subsample=(2,2)** means you down sample the image size from (80x80) to (40x40). In ML literature it is often called "stride"
 
@@ -159,7 +159,7 @@ Finally, we can using the Q-learning algorithm to train the neural network.
 
 So, what is Q-learning? In Q-learning the most important thing is the Q-function : Q(s, a) representing the maximum discounted future reward when we perform action **a** in state **s**. **Q(s, a)** gives you an estimation of how good to choose an action **a** in state **s**. 
 
-REPEAT : Q(s, a) representing the maximum discounted future reward when we perform action **a** in state **s**
+REPEAT : **Q(s, a)** representing the maximum discounted future reward when we perform action **a** in state **s**
 
 You might ask 1) Why Q-function is useful? 2) How can I get the Q-function?
 
