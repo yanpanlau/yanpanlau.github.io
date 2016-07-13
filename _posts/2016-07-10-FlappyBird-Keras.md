@@ -11,7 +11,7 @@ title: Using Keras and Deep Q-Network to Play FlappyBird
 
 This project demonstrates how to use the Deep-Q Learning algorithm with Keras together to play FlappyBird.
 
-This is my first project in Machine Learning and intended to target newcomers who are interested in Reinforcement Learning.
+This article is intended to target newcomers who are interested in Reinforcement Learning.
 
 # Installation Dependencies:
 
