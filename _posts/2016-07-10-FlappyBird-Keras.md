@@ -77,6 +77,8 @@ Interesting readers can modify the reward function in **game/wrapped_flappy_bird
 
 ### Image pre-processing
 
+![](/img/bird.jpg)
+
 In order to make the code train faster, it is vital to do some image processing. Here are the key elements:
 
 1. I first convert the color image into grayscale
