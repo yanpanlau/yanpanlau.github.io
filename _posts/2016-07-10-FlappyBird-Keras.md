@@ -262,7 +262,7 @@ if t > OBSERVE:
 
 ### Experience Replay
 
-If you examine the code above, there is a comment called "Experience Replay". Let me explain what it does: It was found that approximation of Q-value using non-linear functions like neural network is not very stable. The most important trick to solve this problem is called **experience replay**. During the gameplay all the episode $$<s, a, r, s^'>$$ are stored in replay memory **D**. (I use Python function deque() to store it). When training the network, random mini-batches from the replay memory are used instead of most the recent transition, which will greatly improve the stability.
+If you examine the code above, there is a comment called "Experience Replay". Let me explain what it does: It was found that approximation of Q-value using non-linear functions like neural network is not very stable. The most important trick to solve this problem is called **experience replay**. During the gameplay all the episode $$ (s, a, r, s^{'}) $$ are stored in replay memory **D**. (I use Python function deque() to store it). When training the network, random mini-batches from the replay memory are used instead of most the recent transition, which will greatly improve the stability.
 
 ### Exploration vs. Exploitation
 
