@@ -23,7 +23,7 @@ This article is intended to target newcomers who are interested in Reinforcement
 
 # How to Run?
 
-**CPU only**
+**CPU only/TensorFlow**
 
 ```
 git clone https://github.com/yanpanlau/Keras-FlappyBird.git
