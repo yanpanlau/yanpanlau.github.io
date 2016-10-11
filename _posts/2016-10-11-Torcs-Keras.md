@@ -55,8 +55,7 @@ In the previous blog post [Using Keras and Deep Q-Network to Play FlappyBird](ht
 
 Google Deepmind has devised a new algorithm to tackle the continuous action space problem by combining 3 techniques together 1) [Deterministic Policy-Gradient Algorithms](http://jmlr.org/proceedings/papers/v32/silver14.pdf) 2) [Actor-Critic Methods](https://webdocs.cs.ualberta.ca/~sutton/book/ebook/node66.html) 3) [Deep Q-Network](https://arxiv.org/abs/1312.5602) called [Deep Deterministic Policy Gradients (DDPG)](https://arxiv.org/abs/1509.02971)
 
-The original paper in 1) is not easy for non-machine learning expert to digest so I will sketch the proof here. If you are already familiar with the algorithm you can directly go to **Keras code session**
-
+The original paper in 1) is not easy for non-machine learning expert to digest so I will sketch the proof here. If you are already familiar with the algorithm you can directly go to Keras code session.
 
 ##Policy Network
 First, we are going to define a **policy network** that implements our AI-driver. This network will take the state of the game (for example, the velocity of the car, the distance between the car and the track axis etc) and decide what we should do (steer left or right, hit the gas pedal or hit the brake). It is called Policy-Based Reinforcement Learning because we will directly parametrize the policy
