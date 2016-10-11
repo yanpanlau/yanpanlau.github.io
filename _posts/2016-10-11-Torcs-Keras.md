@@ -411,7 +411,7 @@ It turns out that asking AI to learn how to brake is much harder than steering o
 
 So how to solve this problem? I recalled myself when I first learnt driving in Princeton many years ago, my teacher told me do not hit the brake too hard and also try to **feel** the brake. I apply this idea into TORCS with a **stochastic brake** : During the exploration phase, I hit the brake 10% of the time (feel the brake) while 90% of time I don't hit the brake. Since I only hit the brake 10% of the time the car can get some velocity therefore it won't stuck in a poor local minimum (car not moving) while at the same time it can learn how to brake.
 
-The third video shows that the "stochastic brake" allows AI agent accelerate very fast in a straight line and brake properly before the turn. I like this driving action as it is much more closed to human behaviour.
+The third video shows that the "stochastic brake" allows AI agent accelerate very fast in a straight line and brake properly before the turn. I like this driving action as it is much more closer to human behaviour.
 
 {:refdef: style="text-align: center;"}
 {% include brake.html id=JqQd5Bqgedo %}
