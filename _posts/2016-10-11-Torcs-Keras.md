@@ -4,7 +4,7 @@ comments: true
 title: Using Keras and Deep Deterministic Policy Gradient to play TORCS
 ---
 
-300 lines of python code to demonstrate DDPG with Keras
+300 lines of [python code](https://github.com/yanpanlau/DDPG-Keras-Torcs) to demonstrate DDPG with Keras
 
 {:refdef: style="text-align: center;"}
 ![](/img/torcs/fast.gif)
