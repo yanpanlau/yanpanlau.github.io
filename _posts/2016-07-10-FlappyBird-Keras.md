@@ -6,7 +6,9 @@ title: Using Keras and Deep Q-Network to Play FlappyBird
 
 200 lines of python code to demonstrate DQN with Keras
 
+{:refdef: style="text-align: center;"}
 ![](/img/animation1.gif)
+{: refdef}
 
 # Overview
 
@@ -25,19 +27,19 @@ This article is intended to target newcomers who are interested in Reinforcement
 
 **CPU only/TensorFlow**
 
-```
+{% highlight python %}
 git clone https://github.com/yanpanlau/Keras-FlappyBird.git
 cd Keras-FlappyBird
 python qlearn.py -m "Run"
-```
+{% endhighlight %}
 
 **GPU version (Theano)**
 
-```
+{% highlight python %}
 git clone https://github.com/yanpanlau/Keras-FlappyBird.git
 cd Keras-FlappyBird
 THEANO_FLAGS=device=gpu,floatX=float32,lib.cnmem=0.2 python qlearn.py -m "Run"
-```
+{% endhighlight %}
 
 **lib.cnmem=0.2** means you assign only 20% of the GPU's memory to the program.
 
@@ -67,17 +69,20 @@ The code simply does the following:
 
 First of all, the FlappyBird is already written in Python via pygame, so here is the code snippet to access the FlappyBird API
 
-```python
+{% highlight python %}
 import wrapped_flappy_bird as game
 x_t1_colored, r_t, terminal = game_state.frame_step(a_t)
-```
+{% endhighlight %}
+
 The idea is quite simple, the input is **a_t** (0 represent don't flap, 1 represent flap), the API will give you the next frame **x_t1_colored**, the **reward** (0.1 if alive, +1 if pass the pipe, -1 if die) and **terminal** is a boolean flag indicates whether the game is FINISHED or NOT. We also followed DeepMind suggestion to clip the reward between [-1,+1] to improve the stability. I have not yet get a chance to test out different reward functions but it would be an interesting exercise to see how the performance is changed with different reward functions.
 
 Interesting readers can modify the reward function in **game/wrapped_flappy_bird.py", under the function **def frame_step(self, input_actions)**
 
 ### Image pre-processing
 
+{:refdef: style="text-align: center;"}
 ![](/img/bird.jpg)
+{: refdef}
 
 In order to make the code train faster, it is vital to do some image processing. Here are the key elements:
 
@@ -87,14 +92,15 @@ In order to make the code train faster, it is vital to do some image processing.
 
 Why do I need to stack 4 frames together? This is one way for the model to be able to infer the velocity information of the bird.
 
-```python
+{% highlight python %}
 x_t1 = skimage.color.rgb2gray(x_t1_colored)
 x_t1 = skimage.transform.resize(x_t1,(80,80))
 x_t1 = skimage.exposure.rescale_intensity(x_t1, out_range=(0, 255))
 
 x_t1 = x_t1.reshape(1, 1, x_t1.shape[0], x_t1.shape[1])
 s_t1 = np.append(x_t1, s_t[:, :3, :, :], axis=1)
-```
+{% endhighlight %}
+
 **x_t1** is a single frame with shape (1x1x80x80) and **s_t1** is the stacked frame with shape (1x4x80x80). You might ask, why the input dimension is (1x4x80x80) but not (4x80x80)? Well, it is a requirement in Keras so let's stick with it.
 
 Note: Some readers may ask what is **axis=1**? It means that when I stack the frames, I want to stack on the "2nd" dimension. i.e. I am stacking under (1x**4**x80x80), the 2nd index.
@@ -103,7 +109,7 @@ Note: Some readers may ask what is **axis=1**? It means that when I stack the fr
 
 Now, we can input the pre-processed screen into the neural network, which is a convolution neural network:
 
-```python
+{% highlight python %}
 def buildmodel():
     print("Now we build the model")
     model = Sequential()
@@ -122,7 +128,7 @@ def buildmodel():
     model.compile(loss='mse',optimizer=adam)
     print("We finish building the model")
     return model
-```
+{% endhighlight %}
 
 The exact architecture is following : The input to the neural network consists of an 4x80x80 images. The first hidden layer convolves 32 filters of 8 x 8 with stride 4 and applies ReLU activation function. The 2nd layer convolves a 64 filters of 4 x 4 with stride 2 and applies ReLU activation function. The 3rd layer convolves a 64 filters of 3 x 3 with stride 1 and applies ReLU activation function. The final hidden layer is fully-connected consisted of 512 rectifier units. The output layer is a fully-connected linear layer with a single output for each valid action.
 
@@ -142,9 +148,10 @@ Keras makes it very easy to build convolution neural network. However, there are
 
 A) It is important to choose a right initialization method. I choose normal distribution with $$\sigma=0.01$$
 
-```python
+{% highlight python %}
 init=lambda shape, name: normal(shape, scale=0.01, name=name)
-```
+{% endhighlight %}
+
 
 B) The ordering of the dimension is important, the default setting is 4x80x80 (Theano setting), so if your input is 80x80x4 (Tensorflow setting) then you are in trouble because the dimension is wrong. **Alert**: If your input dimension is 80x80x4 (Tensorflow setting) you need to set **dim_ordering = tf**  (tf means tensorflow, th means theano)
 
@@ -227,7 +234,7 @@ where $$f$$ is our neural network with input $$s$$ and weight parameters $$\thet
 
 Here is the code below to demonstrate how it works
 
-```python
+{% highlight python %}
 if t > OBSERVE:
     #sample a minibatch to train on
     minibatch = random.sample(D, BATCH)
@@ -258,7 +265,7 @@ if t > OBSERVE:
 
     s_t = s_t1
     t = t + 1
-``` 
+{% endhighlight %}
 
 ### Experience Replay
 
@@ -268,7 +275,7 @@ If you examine the code above, there is a comment called "Experience Replay". Le
 
 There is another issue in the reinforcement learning algorithm which called Exploration vs. Exploitation. How much of an agent's time should be spent exploiting its existing known-good policy, and how much time should be focused on exploring new, possibility better, actions? We often encounter similar situations in real life too. For example, we face on which restaurant to go to on Saturday night.  We all have a set of restaurants that we prefer, based on our policy/strategy book $$Q(s,a)$$. If we stick to our normal preference, there is a strong probability that we'll pick a good restaurant. However, sometimes, we occasionally like to try new restaurants to see if they are better. The RL agents face the same problem. In order to maximize future reward, they need to balance the amount of time that they follow their current policy (this is called being “greedy”), and the time they spend exploring new possibilities that might be better. A popular approach is called $$\epsilon$$ greedy approach. Under this approach, the policy tells the agent to try a random action some percentage of the time, as defined by the variable $$\epsilon$$ (epsilon), which is a number between 0 and 1. The strategy will help the RL agent to occasionally try something new and see if we can achieve ultimate strategy.
 
-```python
+{% highlight python %}
 if random.random() <= epsilon:
     print("----------Random Action----------")
     action_index = random.randrange(ACTIONS)
@@ -278,7 +285,7 @@ if random.random() <= epsilon:
     max_Q = np.argmax(q)
     action_index = max_Q
     a_t[max_Q] = 1
-```
+{% endhighlight %}
 
 
 I think that's it. I hope this blog will help you to understand how DQN works. 
