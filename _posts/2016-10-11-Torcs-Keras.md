@@ -286,7 +286,7 @@ However, I found that the training is not very stable as reported in the origina
 
 I believe the reason is that in the original policy the AI will try to accelerate the gas pedal very hard (to get maximum reward) and it hits the edge and the episode terminated very quickly. Therefore, the neural network stuck in a very poor local minimum. The new proposed reward function is below:
 
-$$R_t = V_x cos(\theta) - V_y sin(\theta) - V_x \mid trackPos \mid$$
+$$R_t = V_x cos(\theta) - V_x sin(\theta) - V_x \mid trackPos \mid$$
 
 In plain English, we want to maximum longitudinal velocity (first term), minimize transverse velocity (second term), and we also penalize the AI if it constantly drives very off center of the track (third term)
 
