@@ -417,6 +417,8 @@ The third video shows that the "stochastic brake" allows AI agent accelerate ver
 {% include brake.html id=JqQd5Bqgedo %}
 {: refdef}
 
+## Final result
+
 (Update on 25-Oct-2016) The fourth video shows that staying in the middle of the track is not a necessary requirement in the reward function. The AI agent can learn to find the apexes of turns.
 
 {:refdef: style="text-align: center;"}
