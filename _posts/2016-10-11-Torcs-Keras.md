@@ -417,6 +417,14 @@ The third video shows that the "stochastic brake" allows AI agent accelerate ver
 {% include brake.html id=JqQd5Bqgedo %}
 {: refdef}
 
+(Update on 25-Oct-2016) The fourth video shows that staying in the middle of the track is not a necessary requirement in the reward function. The AI agent can learn to find the apexes of turns.
+
+{:refdef: style="text-align: center;"}
+{% include wheel2.html id=Tb5gASEJIRM %}
+{: refdef}
+
+
+
 
 ## Conclusions and Future Work
 In this work, we manage to demonstrate using Keras and DDPG algorithm to play TORCS. Although the DDPG can learn a reasonable policy, I still think it is quite different from how humans learn to drive. For example, we used Ornstein-Uhlenbeck process to perform the exploration. However, when the number of actions increase, the number of combinations increase and it is not obvious to me how to do the exploration. Consider using DDPG algorithm to drive a Boeing 747:
