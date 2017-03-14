@@ -18,6 +18,8 @@ This article is intended to target newcomers who are interested in Reinforcement
 
 # Installation Dependencies:
 
+(Update : 13 March 2017, code and weight file has been updated to support latest version of tensorflow and keras)
+
 * Python 2.7
 * Keras 1.0 
 * pygame
