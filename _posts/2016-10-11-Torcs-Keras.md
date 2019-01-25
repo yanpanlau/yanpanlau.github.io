@@ -155,7 +155,7 @@ The following figure shows the actor-critic architecture from Sutton's Book [2]
 # Keras Code Explanation 
 
 ## Actor Network
-Let's first talk about how to build the Actor Network in Keras. Here we used 2 hidden layers with 300 and 600 hidden units respectively. The output consist of 3 continuous actions, **Steering**, which is a single unit with tanh activation function (where -1 means max right turn and +1 means max left turn). **Acceleration**, which is a single unit with sigmoid activation function (where 0 means no gas, 1 means full gas). **Brake**, another single unit with sigmoid activation function (where 0 means no brake, 1 bull brake)
+Let's first talk about how to build the Actor Network in Keras. Here we used 2 hidden layers with 300 and 600 hidden units respectively. The output consist of 3 continuous actions, **Steering**, which is a single unit with tanh activation function (where -1 means max right turn and +1 means max left turn). **Acceleration**, which is a single unit with sigmoid activation function (where 0 means no gas, 1 means full gas). **Brake**, another single unit with sigmoid activation function (where 0 means no brake, 1 full brake)
 
 {% highlight python %}
 
